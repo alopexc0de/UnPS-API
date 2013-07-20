@@ -213,18 +213,30 @@ class api{
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canImg != 1) return 'You are not authorized to set images to private';
-
 		$publink = null;
-		if($private == 1){
-			$pubLink = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
-			$pubLink = base_convert($short, 10, 36); 
-		}
 
 		$sql = "SELECT * FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
-		if($result = $idb->query($sql)){
-			$sql = "UPDATE `share` SET (private, sharelink) VALUES('$private', '$pubLink') WHERE `name` = '$imgName';";
-			if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
-			return "Image $imgName edited";
+		if($result = $idb->query($sql)){}
+			if($private == 1){
+				$pubLink = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+				$pubLink = base_convert($short, 10, 36); 
+
+				$location = "Pictures/Private.png/$uesrname";
+				if(!file_exists($location)) mkdir($location);
+
+				// This /should/ put the files where they belong
+				move_uploaded_file("Pictures/$imgName", "$location/$imgName");
+				move_uploaded_file("thumbs/$imgName", "thumbs/private/$username/$imgName");
+
+				$sql = "UPDATE `share` SET (location, private, sharelink) VALUES('$location', $private', '$pubLink') WHERE `name` = '$imgName';";
+				if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+				return "Image $imgName edited";
+			}else{
+				$sql = "UPDATE `share` SET (private, sharelink) VALUES('$private', '$pubLink') WHERE `name` = '$imgName';";
+				if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+				return "Image $imgName edited";
+			}
+			
 		}
 		return "ERROR: Wrong username or image doesn't exist";
 	}
