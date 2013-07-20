@@ -7,7 +7,9 @@ require('dbsettings.php');
 
 $unpsAPI = new api();
 
-echo $unpsAPI->shorten($apidb, '580658027', $shortdb, '[Full URL]');
-echo $unpsAPI->delShort($apidb, '580658027', $shortdb, '[Short link Code Only]]');
+//echo $unpsAPI->shorten($apidb, '580658027', $shortdb, '[Full URL]');
+//echo $unpsAPI->delShort($apidb, '580658027', $shortdb, '[Short link Code Only]]');
+
+echo $unpsAPI->upImage($apidb, '580658027', $imgdb, 'dc0de', 'This is a test', 'test', 0, imgdata)
 
 ?>
