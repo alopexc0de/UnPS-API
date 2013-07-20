@@ -15,7 +15,7 @@ class api{
 			$name = $row['name'];
 			
 			$name = addslashes($name);
-			$ip = '127.0.0.1';
+			$ip = $_SERVER['REMOTE_ADDR'];
 			
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Link Shorten', '$canshort', '$link')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
@@ -51,7 +51,7 @@ class api{
 			$name = $row['name'];
 			
 			$name = addslashes($name);
-			$ip = '127.0.0.1';
+			$ip = $_SERVER['REMOTE_ADDR'];
 			
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
@@ -73,6 +73,26 @@ class api{
 				}else return "You are not authorized to delete that link.";
 			}
 		}else{ return 'ERROR: ['.$sdb->error.']'; }
+	}
+
+	function reportLink($apidb, $apikey, $sdb, $link, $reason){
+		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if($row = $result->fetch_assoc()){
+			$canshort = $row['short'];
+			$name = $row['name'];
+			
+			$name = addslashes($name);
+			$ip = $_SERVER['REMOTE_ADDR'];
+
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		}
+		if($canshort != 1) return 'You are not authorized to shorten links, meaning you also can\'t report false negatives';
+
+		$sql = "INSERT INTO `manual` (time, apikey, ip, link, reason) VALUES(NOW(), '$apikey', '$ip', '$link', '$reason');";
+		if(!$result = $sdb->query($sql)) return 'ERROR: ['.$sdb->error.']';
+		return "Reported $link. Please check back in a day or two";
 	}
 }
 
