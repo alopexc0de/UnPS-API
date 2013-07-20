@@ -174,6 +174,30 @@ class api{
 			}						
 		}else{ return "Error: Image size too large"; }
 	}
+
+	function delImage($apidb, $apikey, $idb, $username, $imgName){
+		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if($row = $result->fetch_assoc()){
+			$canImg = $row['short'];
+			$name = $row['name'];
+			
+			$name = addslashes($name);
+			$ip = $_SERVER['REMOTE_ADDR'];
+
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		}
+		if($canImg != 1) return 'You are not authorized to delete images';
+
+		$sql = "SELECT * FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
+		if($result = $idb->query($sql)){
+			$sql = "DELETE FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
+			if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+			return "Image $imgName deleted";
+		}
+		return "ERROR: Wrong username or image doesn't exist";
+	}
 }
 
 ?>
