@@ -152,7 +152,7 @@ class api{
 							
 			if($isprivate == 1){
 				$location .= "/Private.png/$username"; 
-				$sql="INSERT INTO `share` (name, location, type, size, time, comment, username, tags, private, sharelink) VALUES ('$name', '$location', '$type', '$size', NOW(), '$upcomment', '$upusername', '$tags', '$isprivate', '$share')";
+				$sql="INSERT INTO `share` (name, location, type, size, time, comment, username, tags, private, sharelink) VALUES ('$name', '$location', '$type', '$size', NOW(), '$upcomment', '$upusername', '$tags', '$isprivate', '$pubLink')";
 				if(!$result = $idb->query($sql)) return 'ERROR: ['.$idb->error.']';
 				
 				if(!file_exists("Pictures/Private.png/$username")) mkdir("Pictures/Private.png/$username");
@@ -195,6 +195,36 @@ class api{
 			$sql = "DELETE FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
 			if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
 			return "Image $imgName deleted";
+		}
+		return "ERROR: Wrong username or image doesn't exist";
+	}
+
+	function editImg($apidb, $apikey, $idb, $username, $imgName, $private){
+		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if($row = $result->fetch_assoc()){
+			$canImg = $row['short'];
+			$name = $row['name'];
+			
+			$name = addslashes($name);
+			$ip = $_SERVER['REMOTE_ADDR'];
+
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		}
+		if($canImg != 1) return 'You are not authorized to set images to private';
+
+		$publink = null;
+		if($private == 1){
+			$pubLink = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+			$pubLink = base_convert($short, 10, 36); 
+		}
+
+		$sql = "SELECT * FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
+		if($result = $idb->query($sql)){
+			$sql = "UPDATE `share` SET (private, sharelink) VALUES('$private', '$pubLink') WHERE `name` = '$imgName';";
+			if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+			return "Image $imgName edited";
 		}
 		return "ERROR: Wrong username or image doesn't exist";
 	}
