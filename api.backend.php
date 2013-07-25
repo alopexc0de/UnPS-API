@@ -15,6 +15,18 @@ function checkRemoteFile($link){
 	endif;
 }
 
+function genApiKey(){ // Randomly generate a new api key or something
+	$time = mt_rand(17, 33);
+	$key = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+	$key = base_convert($key, 10, 36);
+	for($i=0, $i<$time, $i++){
+		$key .= substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+		$key = base_convert($key, 10, 36);
+	}
+	$key = hash("sha256", $key); 
+	return $key;
+}
+
 include('hashpass.php');
 
 class api{
@@ -278,7 +290,6 @@ class api{
 		}
 		return "Registered $username.";
 	}
-<<<<<<< HEAD
 
 	function regAPI($apidb, $apikey, $name, $email, $perms){
 		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
@@ -318,8 +329,6 @@ class api{
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		return "Registered $name for API use. Key: $key";
 	}
-=======
->>>>>>> parent of 6d43aa8... Add register new API user\n\nRemove addslashes for name cleaning\n - That's something that should be done at the endpoint
 }
 
 ?>
