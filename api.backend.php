@@ -15,6 +15,18 @@ function checkRemoteFile($link){
 	endif;
 }
 
+function genApiKey(){ // Randomly generate a new api key or something
+	$time = mt_rand(17, 33);
+	$key = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+	$key = base_convert($key, 10, 36);
+	for($i=0, $i<$time, $i++){
+		$key .= substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+		$key = base_convert($key, 10, 36);
+	}
+	$key = hash("sha256", $key); 
+	return $key;
+}
+
 include('hashpass.php');
 
 class api{
@@ -26,7 +38,6 @@ class api{
 			$canshort = $row['short'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 			
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Link Shorten', '$canshort', '$link')";
@@ -62,7 +73,6 @@ class api{
 			$canshort = $row['short'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 			
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
@@ -93,8 +103,7 @@ class api{
 		if($row = $result->fetch_assoc()){
 			$canshort = $row['short'];
 			$name = $row['name'];
-			
-			$name = addslashes($name);
+
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Report Link', '$canshort', '$link')";
@@ -116,7 +125,6 @@ class api{
 			$canimg = $row['image'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Upload', '$canimg', '$name')";
@@ -185,7 +193,6 @@ class api{
 			$canImg = $row['image'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Delete', '$canimg', '$imgName')";
@@ -208,8 +215,7 @@ class api{
 		if($row = $result->fetch_assoc()){
 			$canImg = $row['image'];
 			$name = $row['name'];
-			
-			$name = addslashes($name);
+
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Edit', '$canimg', '$imgName/$private')";
@@ -253,7 +259,6 @@ class api{
 			$canReg = $row['reg'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register User', '$canreg', '$username')";
@@ -277,6 +282,45 @@ class api{
 			return 'ERROR: ['.$apidb->error.']';
 		}
 		return "Registered $username.";
+	}
+
+	function regAPI($apidb, $apikey, $name, $email, $perms){
+		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if($row = $result->fetch_assoc()){
+			$canRegAPI = $row['api'];
+			$name = $row['name'];
+			
+			$ip = $_SERVER['REMOTE_ADDR'];
+
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register API User', '$canregAPI', '$email/$perms')";
+			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		}
+		if($canRegAPI != 1) return 'You are not authorized to register to use the API';
+
+		// I don't really like this code - Basically I need to check if a generated key is totally unique and generate a new one if it isn't
+		$sql = "SELECT * FROM `users`";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		$theapikey = '';
+		while($row = $result->fetch_assoc()){
+			$theapikey .= $row['key'].'-';
+		}
+		$theapikey = explode('-', $theapikey);
+		$key = genApiKey();
+		foreach($theapikey as $mykey){
+			if($key == $mykey) $key = genApiKey();
+		}
+		// End API key check - FIX THIS SHIT
+
+		$perms = explode(',', $perms);
+		$short = $perms[0];
+		$image = $perms[1];
+		$reg = $perms[2];
+		$api = $perms[3];
+
+		$sql = "INSERT INTO `users` (name, key, short, image, reg, api, email) VALUES('$name', '$key', '$short', '$image', '$reg', '$api', $email)";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		return "Registered $name for API use. Key: $key";
 	}
 }
 
