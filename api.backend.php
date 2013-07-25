@@ -195,7 +195,7 @@ class api{
 			
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Delete', '$canimg', '$imgName')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Delete', '$canImg', '$imgName')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canImg != 1) return 'You are not authorized to delete images';
@@ -218,7 +218,7 @@ class api{
 
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Edit', '$canimg', '$imgName/$private')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Edit', '$canImg', '$imgName/$private')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canImg != 1) return 'You are not authorized to set images to private';
@@ -261,7 +261,7 @@ class api{
 			
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register User', '$canreg', '$username')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register User', '$canReg', '$username')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canReg != 1) return 'You are not authorized to register users';
@@ -293,7 +293,7 @@ class api{
 			
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register API User', '$canregAPI', '$email/$perms')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register API User', '$canRegAPI', '$email/$perms')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canRegAPI != 1) return 'You are not authorized to register to use the API';
