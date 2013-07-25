@@ -284,7 +284,7 @@ class api{
 		return "Registered $username.";
 	}
 
-	function regAPI($apidb, $apikey, $name, $email, $perms){
+	function regAPI($apidb, $apikey, $appname, $email, $perms){
 		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		if($row = $result->fetch_assoc()){
@@ -312,15 +312,51 @@ class api{
 		}
 		// End API key check - FIX THIS SHIT
 
+		$resetkey = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
+		$resetkey = base_convert($resetkey, 10, 36);
+
 		$perms = explode(',', $perms);
 		$short = $perms[0];
 		$image = $perms[1];
 		$reg = $perms[2];
 		$api = $perms[3];
 
-		$sql = "INSERT INTO `users` (name, key, short, image, reg, api, email) VALUES('$name', '$key', '$short', '$image', '$reg', '$api', $email)";
+		$sql = "INSERT INTO `users` (name, key, short, image, reg, api, email, resetkey) VALUES('$appname', '$key', '$short', '$image', '$reg', '$api', '$email', '$resetkey')";
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
-		return "Registered $name for API use. Key: $key";
+		return "Registered $name for API use. Key: $key - ResetKey (KEEP THIS SAFE AND SECRET): $resetkey";
+	}
+
+	// End register functions, begin reset functions (reset apikey, reset user password)
+
+	function resetAPI($apidb, $apikey, $appname, $email, $resetkey){
+		$apisql = "SELECT * FROM `users` WHERE `resetkey` = '$resetkey' AND `name` = '$appname' LIMIT 1;";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if($row = $result->fetch_assoc()){
+			$canRegAPI = 1;
+			
+			$ip = $_SERVER['REMOTE_ADDR'];
+
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$appname', '$apikey', '$ip', 'Reset API User Key', '$canRegAPI', '$email')";
+			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		}
+		
+		// I don't really like this code - Basically I need to check if a generated key is totally unique and generate a new one if it isn't
+		$sql = "SELECT * FROM `users`";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		$theapikey = '';
+		while($row = $result->fetch_assoc()){
+			$theapikey .= $row['key'].'-';
+		}
+		$theapikey = explode('-', $theapikey);
+		$key = genApiKey();
+		foreach($theapikey as $mykey){
+			if($key == $mykey) $key = genApiKey();
+		}
+		// End API key check - FIX THIS SHIT
+
+		$sql = "UPDATE `users` SET `apikey` = '$key' WHERE `resetkey` = '$resetkey' AND `name` = '$appname';";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		return "APIKey reset. Key: $key";
 	}
 }
 
