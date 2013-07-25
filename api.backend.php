@@ -358,6 +358,33 @@ class api{
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		return "APIKey reset. Key: $key";
 	}
+
+	function resetPass($apidb, $apikey, $email, $newpass){
+		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if($row = $result->fetch_assoc()){
+			$canUser = 1;
+			$name = $row['name'];
+			
+			$ip = $_SERVER['REMOTE_ADDR'];
+
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Reset User Password', '$canUser', '$email')";
+			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		}
+		
+		$sql = "SELECT * FROM `users` WHERE `email` = '$email'";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+
+		$iterations = mt_rand(11, 51);
+		$password = explode("/", hashpass($password, NULL, $iterations));
+		$salt = $password[1];
+		$password = $password[0];
+
+		$sql = "UPDATE `users` (password, salt, iterations) VALUES ('$password', '$salt', '$iterations') WHERE `email` = '$email';";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		return "Password changed";
+
+	}
 }
 
 ?>
