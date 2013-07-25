@@ -15,6 +15,8 @@ function checkRemoteFile($link){
 	endif;
 }
 
+include('hashpass.php');
+
 class api{
 	// Begin Short
 	function shorten($apidb, $apikey, $sdb, $link, $dpass=null){
@@ -240,6 +242,41 @@ class api{
 			
 		}
 		return "ERROR: Wrong username or image doesn't exist";
+	}
+
+	// End Image host functions, begin register functions (register, register to use api)
+
+	function regUser($apidb, $apikey, $udb, $username, $password, $email){
+		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if($row = $result->fetch_assoc()){
+			$canReg = $row['reg'];
+			$name = $row['name'];
+			
+			$name = addslashes($name);
+			$ip = $_SERVER['REMOTE_ADDR'];
+
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		}
+		if($canReg != 1) return 'You are not authorized to register users';
+
+		$regsql = "SELECT * FROM `logins` WHERE `username` = '".$username."' LIMIT 1;";
+		if(!$result = $db->query($regsql)){
+			echo "The user $username already exists.";
+			return;
+		}
+
+		$iterations = mt_rand(11, 51);
+		$password = explode("/", hashpass($password, NULL, $iterations));
+		$salt = $password[1];
+		$password = $password[0];
+
+		$sql = "INSERT INTO `logins` (username, password, email, regdate, logdate, salt, iterations) VALUES('$username', '$password', '$email', NOW(), NOW(), '$salt', '$iterations');";
+		if(!$result = $db->query($sql)){
+			return 'ERROR: ['.$apidb->error.']';
+		}
+		return "Registered $username.";
 	}
 }
 
