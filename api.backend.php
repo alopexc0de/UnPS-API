@@ -104,6 +104,7 @@ class api{
 		if(!$result = $sdb->query($sql)) return 'ERROR: ['.$sdb->error.']';
 		return "Reported $link. Please check back in a day or two";
 	}
+
 	// End Short, begin image host
 
 	function upImage($apidb, $apikey, $idb, $username, $comment, $tags, $private, $imgdata){
@@ -179,7 +180,7 @@ class api{
 		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		if($row = $result->fetch_assoc()){
-			$canImg = $row['short'];
+			$canImg = $row['image'];
 			$name = $row['name'];
 			
 			$name = addslashes($name);
@@ -203,7 +204,7 @@ class api{
 		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		if($row = $result->fetch_assoc()){
-			$canImg = $row['short'];
+			$canImg = $row['image'];
 			$name = $row['name'];
 			
 			$name = addslashes($name);
