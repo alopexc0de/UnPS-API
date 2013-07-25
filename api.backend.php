@@ -97,7 +97,7 @@ class api{
 			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Report Link', '$canshort', '$link')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canshort != 1) return 'You are not authorized to shorten links, meaning you also can\'t report false negatives';
@@ -119,7 +119,7 @@ class api{
 			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Upload', '$canimg', '$name')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canimg != 1) return 'You are not authorized to upload images';
@@ -188,7 +188,7 @@ class api{
 			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Delete', '$canimg', '$imgName')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canImg != 1) return 'You are not authorized to delete images';
@@ -212,7 +212,7 @@ class api{
 			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Edit', '$canimg', '$imgName/$private')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canImg != 1) return 'You are not authorized to set images to private';
@@ -256,7 +256,7 @@ class api{
 			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
+			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register User', '$canreg', '$username')";
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		if($canReg != 1) return 'You are not authorized to register users';
