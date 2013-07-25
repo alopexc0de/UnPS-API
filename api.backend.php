@@ -38,7 +38,6 @@ class api{
 			$canshort = $row['short'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 			
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Link Shorten', '$canshort', '$link')";
@@ -74,7 +73,6 @@ class api{
 			$canshort = $row['short'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 			
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Short Link Delete', '$canshort', '$link')";
@@ -106,7 +104,6 @@ class api{
 			$canshort = $row['short'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Report Link', '$canshort', '$link')";
@@ -128,7 +125,6 @@ class api{
 			$canimg = $row['image'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Upload', '$canimg', '$name')";
@@ -196,8 +192,7 @@ class api{
 		if($row = $result->fetch_assoc()){
 			$canImg = $row['image'];
 			$name = $row['name'];
-			
-			$name = addslashes($name);
+
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Delete', '$canImg', '$imgName')";
@@ -221,7 +216,6 @@ class api{
 			$canImg = $row['image'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Image Edit', '$canImg', '$imgName/$private')";
@@ -265,7 +259,6 @@ class api{
 			$canReg = $row['reg'];
 			$name = $row['name'];
 			
-			$name = addslashes($name);
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 			$apisql = "INSERT INTO `apiuse` (time, name, apikey, ip, type, allowed, misc) VALUES (NOW(), '$name', '$apikey', '$ip', 'Register User', '$canReg', '$username')";
