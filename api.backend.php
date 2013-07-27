@@ -378,11 +378,11 @@ class api{
 		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 
 		$iterations = mt_rand(11, 51);
-		$password = explode("/", hashpass($password, NULL, $iterations));
+		$password = explode("/", hashpass($newpass, NULL, $iterations));
 		$salt = $password[1];
 		$password = $password[0];
 
-		$sql = "UPDATE `logins` (password, salt, iterations) VALUES ('$password', '$salt', '$iterations') WHERE `email` = '$email';";
+		$sql = "UPDATE `logins` (`password`, `salt`, `iterations`) VALUES ('$password', '$salt', '$iterations') WHERE `email` = '$email';";
 		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 		return "Password changed";
 
