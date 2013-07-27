@@ -19,7 +19,7 @@ function genApiKey(){ // Randomly generate a new api key or something
 	$time = mt_rand(17, 33);
 	$key = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
 	$key = base_convert($key, 10, 36);
-	for($i=0, $i<$time, $i++){
+	for($i=0; $i<$time; $i++){
 		$key .= substr(number_format(time() * mt_rand(),0,'',''),0,10); 
 		$key = base_convert($key, 10, 36);
 	}
@@ -158,7 +158,7 @@ class api{
 		$name = "$newImgName.$file_ext";
 			
 		if(round(($imgdata["file"]["size"] / 1024), 2) < 80000){
-			if(file_exists("$location/$name") return "ERROR: $name already exists";
+			if(file_exists("$location/$name")) return "ERROR: $name already exists";
 			if(preg_match('/php/i', $name) || preg_match('/phtml/i', $name) || preg_match('/htaccess/i', $name)) return "$name can't be uploaded";
 							
 			if($isprivate == 1){
@@ -226,7 +226,7 @@ class api{
 		$publink = null;
 
 		$sql = "SELECT * FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
-		if($result = $idb->query($sql)){}
+		if($result = $idb->query($sql)){
 			if($private == 1){
 				$pubLink = substr(number_format(time() * mt_rand(),0,'',''),0,10); 
 				$pubLink = base_convert($short, 10, 36); 
@@ -267,8 +267,8 @@ class api{
 		}
 		if($canReg != 1) return 'You are not authorized to register users';
 
-		$regsql = "SELECT * FROM `logins` WHERE `username` = '".$username."' LIMIT 1;";
-		if(!$result = $db->query($regsql)){
+		$regsql = "SELECT * FROM `logins` WHERE `username` = '".$username."' OR `email` = '".$email."' LIMIT 1;";
+		if(!$result = $udb->query($regsql)){
 			echo "The user $username already exists.";
 			return;
 		}
@@ -279,7 +279,7 @@ class api{
 		$password = $password[0];
 
 		$sql = "INSERT INTO `logins` (username, password, email, regdate, logdate, salt, iterations) VALUES('$username', '$password', '$email', NOW(), NOW(), '$salt', '$iterations');";
-		if(!$result = $db->query($sql)){
+		if(!$result = $udb->query($sql)){
 			return 'ERROR: ['.$apidb->error.']';
 		}
 		return "Registered $username.";
