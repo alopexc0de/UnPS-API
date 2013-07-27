@@ -344,7 +344,7 @@ class api{
 		
 		// I don't really like this code - Basically I need to check if a generated key is totally unique and generate a new one if it isn't
 		$sql = "SELECT * FROM `users`";
-		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if(!$result = $apidb->query($sql)) return 'ERROR: ['.$apidb->error.']';
 		$theapikey = '';
 		while($row = $result->fetch_assoc()){
 			$theapikey .= $row['key'].'-';
@@ -356,8 +356,8 @@ class api{
 		}
 		// End API key check - FIX THIS SHIT
 
-		$sql = "UPDATE `users` SET `apikey` = '$key' WHERE `resetkey` = '$resetkey' AND `name` = '$appname';";
-		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		$sql = "UPDATE `users` SET `key` = '$key' WHERE `resetkey` = '$resetkey' AND `name` = '$appname';";
+		if(!$result = $apidb->query($sql)) return 'ERROR: ['.$apidb->error.']';
 		return "APIKey reset. Key: $key";
 	}
 
