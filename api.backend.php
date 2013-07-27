@@ -188,7 +188,7 @@ class api{
 
 	function delImage($apidb, $apikey, $idb, $username, $imgName){
 		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
-		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$idb->error.']';
 		if($row = $result->fetch_assoc()){
 			$canImg = $row['image'];
 			$name = $row['name'];
@@ -203,7 +203,7 @@ class api{
 		$sql = "SELECT * FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
 		if($result = $idb->query($sql)){
 			$sql = "DELETE FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
-			if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+			if(!$result = $idb->query($sql)) return 'ERROR: ['.$idb->error.']';
 			// Unlink images
 			return "Image $imgName deleted";
 		}
@@ -239,11 +239,11 @@ class api{
 				move_uploaded_file("thumbs/$imgName", "thumbs/private/$username/$imgName");
 
 				$sql = "UPDATE `share` SET (location, private, sharelink) VALUES('$location', $private', '$pubLink') WHERE `name` = '$imgName';";
-				if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+				if(!$result = $idb->query($sql)) return 'ERROR: ['.$idb->error.']';
 				return "Image $imgName edited";
 			}else{
 				$sql = "UPDATE `share` SET (private, sharelink) VALUES('$private', '$pubLink') WHERE `name` = '$imgName';";
-				if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+				if(!$result = $idb->query($sql)) return 'ERROR: ['.$idb->error.']';
 				return "Image $imgName edited";
 			}
 			
@@ -280,7 +280,7 @@ class api{
 
 		$sql = "INSERT INTO `logins` (username, password, email, regdate, logdate, salt, iterations) VALUES('$username', '$password', '$email', NOW(), NOW(), '$salt', '$iterations');";
 		if(!$result = $udb->query($sql)){
-			return 'ERROR: ['.$apidb->error.']';
+			return 'ERROR: ['.$udb->error.']';
 		}
 		return "Registered $username.";
 	}
@@ -361,7 +361,7 @@ class api{
 		return "APIKey reset. Key: $key";
 	}
 
-	function resetPass($apidb, $apikey, $email, $newpass){
+	function resetPass($apidb, $apikey, $udb, $email, $newpass){
 		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		if($row = $result->fetch_assoc()){
@@ -375,7 +375,7 @@ class api{
 		}
 		
 		$sql = "SELECT * FROM `users` WHERE `email` = '$email'";
-		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 
 		$iterations = mt_rand(11, 51);
 		$password = explode("/", hashpass($password, NULL, $iterations));
@@ -383,7 +383,7 @@ class api{
 		$password = $password[0];
 
 		$sql = "UPDATE `users` (password, salt, iterations) VALUES ('$password', '$salt', '$iterations') WHERE `email` = '$email';";
-		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 		return "Password changed";
 
 	}
