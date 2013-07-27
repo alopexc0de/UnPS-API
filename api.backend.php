@@ -324,7 +324,7 @@ class api{
 		$api = $perms[3];
 
 		$sql = "INSERT INTO `users` (name, key, short, image, reg, api, email, resetkey) VALUES('$appname', '$key', '$short', '$image', '$reg', '$api', '$email', '$resetkey')";
-		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
+		if(!$result = $apidb->query($sql)) return 'ERROR: ['.$apidb->error.']';
 		return "Registered $appname for API use. Key: $key - ResetKey: $resetkey";
 	}
 
