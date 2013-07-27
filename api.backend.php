@@ -382,7 +382,7 @@ class api{
 		$salt = $password[1];
 		$password = $password[0];
 
-		$sql = "UPDATE `logins` (`password`, `salt`, `iterations`) VALUES ('$password', '$salt', '$iterations') WHERE `email` = '$email';";
+		$sql = "UPDATE `logins` SET `password`='$password', `salt`='$salt', `iterations`='$iterations' WHERE `email` = '$email';";
 		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 		return "Password changed";
 
