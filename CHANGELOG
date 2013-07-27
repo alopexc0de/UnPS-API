@@ -1,0 +1,28 @@
+UnPS-API ChangeLog
+	
+V0.0.3 - Third Release:
+	- Register Users
+	- Register API Users - This has to check for existing apikey
+	- Reset APIKey - This has to check for existing apikey
+	- Reset User Password - This sucks, needs to be better
+	- Fixing of typos
+	- Logging properly recorded
+	- Minor old code changes
+	
+	- Not all functions tested, might not work
+
+V0.0.2 - Second Release:
+	- Shortv4 Report false negative link function added
+	- ImgHostv6 Image upload function added
+	- ImgHostv6 Image delete function added
+	- ImgHostv6 Image edit function added
+	
+	- Not all functions tested, might not work
+
+V0.0.1 - First Release:
+	- Begin with class - make it OOP
+	- checkRemoteFile() - link state checker added
+	- Shortv4 shorten function added
+	- Shortv4 Short Link Delete function added
+	
+	- All functions tested and work
