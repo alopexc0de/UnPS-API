@@ -11,4 +11,7 @@ if($shortdb->connect_errno > 0) die('Unable to connect to database [' . $shortdb
 $imgdb = new mysqli('localhost', 'image', 'password', 'image'); // Connect to image host DB
 if($imgdb->connect_errno > 0) die('Unable to connect to database [' . $imgdb->connect_error . '] - Check dbsettings.php');
 
+$udb = new mysqli('localhost', 'logins', 'password', 'logins'); // Connect to UserAC DB
+if($udb->connect_errno > 0) die('Unable to connect to database [' . $udb->connect_error . '] - Check dbsettings.php');
+
 ?>
