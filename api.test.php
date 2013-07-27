@@ -15,6 +15,7 @@ $unpsAPI = new api();
 //echo $unpsAPI->regUser($apidb, '580658027', $udb, 'David', 'password123', 'tehfoxy.c0de@gmail.com'); // Register users
 //echo $unpsAPI->regAPI($apidb, '580658027', 'UnPS-GAMA Link Shortener', 'tehfoxy.c0de@gmail.com', '1,0,0,0'); // Register API user
 
-echo $unpsAPI->resetAPI($apidb, '580658027', 'UnPS-GAMA Link Shortener', 'tehfoxy.c0de@gmail.com', '279qit9');
+//echo $unpsAPI->resetAPI($apidb, '580658027', 'UnPS-GAMA Link Shortener', 'tehfoxy.c0de@gmail.com', '279qit9'); // test reset api key
+echo $unpsAPI->resetPass($apidb, '580658027', $udb, 'David', 'tefoxy.c0de@gmail.com', 'password1234s'); // Test change password
 
 ?>

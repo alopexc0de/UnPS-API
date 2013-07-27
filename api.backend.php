@@ -361,7 +361,7 @@ class api{
 		return "APIKey reset. Key: $key";
 	}
 
-	function resetPass($apidb, $apikey, $udb, $email, $newpass){
+	function resetPass($apidb, $apikey, $udb, $username, $email, $newpass){
 		$apisql = "SELECT * FROM `users` WHERE `key` = '$apikey' LIMIT 1;";
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		if($row = $result->fetch_assoc()){
@@ -374,7 +374,7 @@ class api{
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		
-		$sql = "SELECT * FROM `users` WHERE `email` = '$email'";
+		$sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `username` = '$username' LIMIT 1;";
 		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 
 		$iterations = mt_rand(11, 51);
