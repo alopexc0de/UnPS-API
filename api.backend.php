@@ -204,6 +204,7 @@ class api{
 		if($result = $idb->query($sql)){
 			$sql = "DELETE FROM `share` WHERE `name` = '$imgName' AND `username` = '$username';";
 			if(!$result = $idb->query($sql)) return 'ERROR: ['.$apidb->error.']';
+			// Unlink images
 			return "Image $imgName deleted";
 		}
 		return "ERROR: Wrong username or image doesn't exist";
