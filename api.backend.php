@@ -374,7 +374,7 @@ class api{
 			if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
 		}
 		
-		$sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `username` = '$username' LIMIT 1;";
+		$sql = "SELECT * FROM `logins` WHERE `email` = '$email' AND `username` = '$username' LIMIT 1;";
 		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 
 		$iterations = mt_rand(11, 51);
@@ -382,7 +382,7 @@ class api{
 		$salt = $password[1];
 		$password = $password[0];
 
-		$sql = "UPDATE `users` (password, salt, iterations) VALUES ('$password', '$salt', '$iterations') WHERE `email` = '$email';";
+		$sql = "UPDATE `logins` (password, salt, iterations) VALUES ('$password', '$salt', '$iterations') WHERE `email` = '$email';";
 		if(!$result = $udb->query($sql)) return 'ERROR: ['.$udb->error.']';
 		return "Password changed";
 
