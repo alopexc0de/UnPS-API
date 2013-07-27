@@ -299,10 +299,11 @@ class api{
 		}
 		if($canRegAPI != 1) return 'You are not authorized to register to use the API';
 
+		$theapikey = '';
+
 		// I don't really like this code - Basically I need to check if a generated key is totally unique and generate a new one if it isn't
 		$sql = "SELECT * FROM `users`";
-		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
-		$theapikey = '';
+		if(!$result = $apidb->query($sql)) return 'ERROR: ['.$apidb->error.']';
 		while($row = $result->fetch_assoc()){
 			$theapikey .= $row['key'].'-';
 		}
