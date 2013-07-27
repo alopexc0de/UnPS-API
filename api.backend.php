@@ -325,7 +325,7 @@ class api{
 
 		$sql = "INSERT INTO `users` (name, key, short, image, reg, api, email, resetkey) VALUES('$appname', '$key', '$short', '$image', '$reg', '$api', '$email', '$resetkey')";
 		if(!$result = $apidb->query($apisql)) return 'ERROR: ['.$apidb->error.']';
-		return "Registered $name for API use. Key: $key - ResetKey (KEEP THIS SAFE AND SECRET): $resetkey";
+		return "Registered $appname for API use. Key: $key - ResetKey: $resetkey";
 	}
 
 	// End register functions, begin reset functions (reset apikey, reset user password)

@@ -95,7 +95,7 @@ Currently, the API supports ten functions:
 			- The user [USERNAME] already exists.
 			- You are not authorized to register users
 		- Register API User:
-			- Registered [APPNAME] for API use. Key: [APIKEY] - ResetKey (KEEP THIS SAFE AND SECRET): [RESET KEY]
+			- Registered [APPNAME] for API use. Key: [APIKEY] - ResetKey: [RESET KEY]
 			- You are not authorized to register to use the API
 		- Reset API Key:
 			- APIKey reset. Key: [APIKEY]
